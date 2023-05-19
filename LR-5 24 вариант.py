@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 sys.setrecursionlimit(100000)
 
-#Ввод
+#----------------Ввод----------------
 
 n = input('Введите натуральное число: ')
 
@@ -24,7 +24,7 @@ except ValueError:
 if n < 1:
     sys.exit('Введено не натуральное число. Программа завершена.')
 
-# Рекурсия
+#----------------Рекурсия----------------
 
 def recursive_f(number):
     if number == 1:
@@ -35,7 +35,7 @@ def recursive_f(number):
         return 5 * recursive_f(number - 1) - 4 * recursive_f(number - 2)
 
 
-# Итерация
+#----------------Итерация----------------
 
 def iterative_f(number):
     if number == 1:

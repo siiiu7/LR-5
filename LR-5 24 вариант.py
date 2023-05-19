@@ -43,7 +43,7 @@ def iterative_f(number):
     elif number == 2:
         return 3
     else:
-        a, b = 4, 5
+        a, b = 3, 3
         for i in range(3, number + 1):
             c = 5 * b - 4 * a
             a, b = b, c

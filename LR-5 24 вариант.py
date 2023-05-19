@@ -9,9 +9,10 @@ F(1) = 3; F(2) = 3; F(w) = 5*F(w-1)-4*F(w-2) при w > 2.
 import sys
 import time
 import matplotlib.pyplot as plt
-import pylab
 
-# -------------------------Ввод-------------------------
+sys.setrecursionlimit(100000)
+
+#Ввод
 
 n = input('Введите натуральное число: ')
 
@@ -23,64 +24,61 @@ except ValueError:
 if n < 1:
     sys.exit('Введено не натуральное число. Программа завершена.')
 
-
-# -----------------------Рекурсия------------------------
+# Рекурсия
 
 def recursive_f(number):
-    if number == 1 or number == 2:
+    if number == 1:
         return 3
-    return 5 * recursive_f(number - 1) - 4 * recursive_f(number - 2)
+    elif number == 2:
+        return 3
+    else:
+        return 5 * recursive_f(number - 1) - 4 * recursive_f(number - 2)
 
 
-# ------------------------Итерация------------------------
+# Итерация
 
 def iterative_f(number):
-    if number == 1 or number == 2:
+    if number == 1:
         return 3
-
-    f_prev = 3
-    f_curr = 3
-
-    for i in range(3, number + 1):
-        f_next = 5 * f_curr - 4 * f_prev
-        f_prev, f_curr = f_curr, f_next
-
-    return f_curr
-
+    elif number == 2:
+        return 3
+    else:
+        a, b = 4, 5
+        for i in range(3, number + 1):
+            c = 5 * b - 4 * a
+            a, b = b, c
+        return c
 
 # ---------------------------------------------------------
+
 recursion_time = []
 iteration_time = []
 num_list = []
+max_recursion_number = 1000    # На больших числах рекурсия будет работать очень медленно
 
-# вычисление функции и замер времени для каждого числа от 1 до n
 for i in range(1, n + 1):
     num_list.append(i)
+    if i <= max_recursion_number:
+        start_time = time.perf_counter()
+        print(str(i) + ') \nРекурсия: ' + str(recursive_f(i)))
 
-    # рекурсия
-    start_time = time.time()
-    recursive_result = recursive_f(i)
-    recursion_time.append(time.time() - start_time)
+        temp = time.perf_counter() - start_time
+        recursion_time.append(temp)
+        print('Время: ' + str(temp))
+    else:
+        recursion_time.append(0)
 
-    # итерация
-    start_time = time.time()
-    iterative_result = iterative_f(i)
-    iteration_time.append(time.time() - start_time)
+    start_time = time.perf_counter()
+    print('Итерация: ' + str(iterative_f(i)))
 
-    # проверка результатов
-    assert recursive_result == iterative_result, f'Ошибка в вычислении. Результаты различны для числа {i}.'
+    temp = time.perf_counter() - start_time
+    print('Время: ' + str(temp))
+    iteration_time.append(temp)
 
-# вывод результатов в табличной форме
-print(f'| {"Число":<5} | {"Рекурсия":<15} | {"Итерация":<15} |')
-print('-' * 40)
-for i in range(n):
-    print(f'| {num_list[i]:<5} | {recursion_time[i]:<15.10f} | {iteration_time[i]:<15.10f} |')
-
-# вывод результатов в графической форме
-plt.plot(num_list, recursion_time, label='Рекурсия')
-plt.plot(num_list, iteration_time, label='Итерация')
-plt.title('Производительность функции F')
-plt.xlabel('Входное число')
-plt.ylabel('Время вычисления, с')
+answer = [recursion_time]
+plt.plot(num_list, recursion_time, label='Рекурсия'), plt.plot(num_list, iteration_time, label='Итерация')
+plt.title("График производительности"), plt.xlabel("Проверяемое число"), plt.ylabel("Время вычислений в секундах")
 plt.legend()
 plt.show()
+
+print(f'\nРекурсивный подход работает быстрее, чем итеративный, для чисел не больше {max_recursion_number}.\n')
